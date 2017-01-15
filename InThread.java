@@ -1,13 +1,20 @@
-package onlyfun;
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package os;
 import java.util.Random;
-
-public class InThread extends Thread  {
-	
-	private boolean active;
+/**
+ *
+ * @author apple
+ */
+public class InThread extends Thread {
+    private boolean active;
 	private int number;
 	private int situ;
-	private int temp;
+	private int temp1;
+        private int temp2;
 	
 	public InThread(int num) {
 		active = true;
@@ -34,7 +41,7 @@ public class InThread extends Thread  {
 	        		for(int i=0; i<10; i++) {
 	        			if(Demo.cubicle[i] == 0) {
 	        				Demo.cubicle[i] = number;
-	        				temp = i;
+	        				temp1 = i;
 	        				situ++;
 	        			
 	        				break;
@@ -46,12 +53,12 @@ public class InThread extends Thread  {
 	        	}
 	        	case 1:{
 	        		System.out.println(number + "找籃子中");
-	        		Demo.cubicle[temp] = 0;
+	        		Demo.cubicle[temp1] = 0;
 	        		
 	        		for(int i=0; i<15; i++) {
 	        			if(Demo.basket[i] == 0) {
 	        				Demo.basket[i] = number;
-	        				temp = i;
+	        				temp2 = i;
 	        				situ++;
 	        				
 	        				break;
@@ -73,7 +80,7 @@ public class InThread extends Thread  {
 	        			if(Demo.cubicle[i] == 0) {
 	        				//Demo.basket[temp] = 0;
 	        				Demo.cubicle[i] = number;
-	        				temp = i;
+	        				temp1 = i;
 	        				situ++;
 	        			
 	        				break;
@@ -85,14 +92,15 @@ public class InThread extends Thread  {
 	        	}
 	        	case 4:{
 	        		System.out.println(number + "回家囉");
-	        		Demo.basket[temp] = 0;
+	        		Demo.basket[temp2] = 0;
 	        		situ++;
-	        		Demo.cubicle[temp] = 0;
+	        		Demo.cubicle[temp1] = 0;
 	        		
 	        		break;
 	        	}
 	        }
 	      	try {
+                        Demo.printInf();
 	      		Thread.currentThread().sleep(3000);
             } 
             catch(InterruptedException e) {

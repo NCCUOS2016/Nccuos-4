@@ -5,6 +5,7 @@
  */
 package os;
 import java.util.Random;
+import static os.Demo.printInf;
 /**
  *
  * @author apple
@@ -12,14 +13,14 @@ import java.util.Random;
 public class InThread extends Thread {
     private boolean active;
 	private int number;
-	private int situ;
+	private int step;
 	private int temp1;
         private int temp2;
 	
 	public InThread(int num) {
 		active = true;
 	   	number = num;
-	   	situ = 0;
+	   	step = 0;
 	}
 	    
 	public void setActive(boolean active) {
@@ -29,83 +30,113 @@ public class InThread extends Thread {
 	public boolean isActive() {
 	    return active;
 	}
+        static private Object obj = new Object();
+        public static void staticWait() {
+            synchronized (obj) {
+            try {
+                obj.wait();
+            } catch (Exception e) {}
+        }    
+    }
 
+        public static void staticNotify() {
+            synchronized (obj) {
+                obj.notify();
+            }
+        }
+    
+	public static void leave(){
+		Demo.basket--;
+		staticNotify();
+	}
 	public void run () {
-	    		
-	    while(situ<5) {
+            while(Demo.basket > Demo.BASKETS.length-1){
+                    System.out.println("No BASKET! NO."+ number +" SEND TO WAITLIST ");
+			staticWait();
+		}
+	    Demo.basket++;		
+	    while(step<5) {
 	        	
-	      	switch(situ) {
+	      	switch(step) {
 	            	
 	      		case 0:{
-	        		System.out.println(number + "找房間中");
-	        		for(int i=0; i<10; i++) {
-	        			if(Demo.cubicle[i] == 0) {
-	        				Demo.cubicle[i] = number;
-	        				temp1 = i;
-	        				situ++;
-	        			
-	        				break;
-	        			}
-	        			if(i==9)
-	        				System.out.println(number + "找不到房間");
-	        		}
-	        		break;
-	        	}
-	        	case 1:{
-	        		System.out.println(number + "找籃子中");
-	        		Demo.cubicle[temp1] = 0;
+	        		System.out.println("No."+number + " Finding BASKET");
 	        		
-	        		for(int i=0; i<15; i++) {
-	        			if(Demo.basket[i] == 0) {
-	        				Demo.basket[i] = number;
-	        				temp2 = i;
-	        				situ++;
-	        				
+	        		
+	        		for(int avalivable=0; avalivable<Demo.BASKETS.length; avalivable++) {
+	        			if(Demo.BASKETS[avalivable] == 0) {
+	        				Demo.BASKETS[avalivable] = number;
+	        				temp2 = avalivable+1;
+	        				step++;
+                                                
+	        				System.out.println("USE NO."+ temp2 + " BASKET");
 	        				break;
 	        			}
-	        			if(i==14)
-		        			System.out.println(number + "找不到籃子");
+	        			if(avalivable==Demo.BASKETS.length-1)
+		        			System.out.println("!!!NO Basket for "+number+"!!!");
 	        		}
 	 	        	break;
 	        	}
+	        	case 1:{
+                                System.out.println("NO."+ number + " Finding ROOM");
+	        		for(int avalivable =0; avalivable<Demo.ROOMS.length; avalivable++) {
+	        			if(Demo.ROOMS[avalivable] == 0) {
+	        				Demo.ROOMS[avalivable] = number;
+	        				temp1 = avalivable+1;
+	        				step++;
+                                                System.out.println("USE NO."+ temp1 + " ROOM");
+	        				break;
+	        			}
+	        			if(avalivable==Demo.ROOMS.length-1)
+	        				System.out.println("!!!NO Room for "+number+"!!!");
+	        		}
+	        		break;
+	        		
+	        	}
 	        	case 2:{
-	        		System.out.println(number + "游泳中");
-	        		situ++;
+	        		System.out.println("NO."+number + " SWIMMING");
+                                System.out.println("NO."+ temp1 + " ROOM EMPTY");
+                                Demo.ROOMS[temp1-1] = 0;
+	        		step++;
 	        		
 	        		break;
 	        	}
 	        	case 3:{
-	        		System.out.println(number + "找房間回家");
-	        		for(int i=0; i<10; i++) {
-	        			if(Demo.cubicle[i] == 0) {
+	        		System.out.println("NO."+number + " Finding ROOM(2ND)");
+	        		for(int i=0; i<Demo.ROOMS.length; i++) {
+	        			if(Demo.ROOMS[i] == 0) {
 	        				//Demo.basket[temp] = 0;
-	        				Demo.cubicle[i] = number;
-	        				temp1 = i;
-	        				situ++;
-	        			
+	        				Demo.ROOMS[i] = number;
+	        				temp1 = i+1;
+	        				step++;
+                                                System.out.println("USE NO."+ temp1 + " ROOM");
 	        				break;
 	        			}
-	        			if(i==9)
-	        				System.out.println(number + "找不到房間");
+	        			if(i==Demo.ROOMS.length-1)
+	        				System.out.println("!!!NO Room for "+number +"!!!");
 	        		}
 	        		break;
 	        	}
 	        	case 4:{
-	        		System.out.println(number + "回家囉");
-	        		Demo.basket[temp2] = 0;
-	        		situ++;
-	        		Demo.cubicle[temp1] = 0;
-	        		
+	        		System.out.println("NO."+ number + " LEAVE POOL");
+                                System.out.println("NO."+ temp1 + " ROOM EMPTY");
+                                System.out.println("NO."+ temp2 + " BASKET EMPTY");
+	        		Demo.BASKETS[temp2-1] = 0;
+	        		step++;
+                                //step=1;
+	        		Demo.ROOMS[temp1-1] = 0;
+	        		leave();
 	        		break;
 	        	}
 	        }
 	      	try {
-                        Demo.printInf();
-	      		Thread.currentThread().sleep(3000);
+                              Thread.currentThread();
+	      		      Thread.sleep(Demo.getPoissonRandom(number+10)*300);
             } 
             catch(InterruptedException e) {
                  e.printStackTrace();
             }
+                
 	    }
 	}
 }

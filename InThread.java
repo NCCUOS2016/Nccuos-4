@@ -60,25 +60,7 @@ public class InThread extends Thread {
 	      	switch(step) {
 	            	
 	      		case 0:{
-	        		System.out.println("No."+number + " Finding BASKET");
-	        		
-	        		
-	        		for(int avalivable=0; avalivable<Demo.BASKETS.length; avalivable++) {
-	        			if(Demo.BASKETS[avalivable] == 0) {
-	        				Demo.BASKETS[avalivable] = number;
-	        				temp2 = avalivable+1;
-	        				step++;
-                                                
-	        				System.out.println("USE NO."+ temp2 + " BASKET");
-	        				break;
-	        			}
-	        			if(avalivable==Demo.BASKETS.length-1)
-		        			System.out.println("!!!NO Basket for "+number+"!!!");
-	        		}
-	 	        	break;
-	        	}
-	        	case 1:{
-                                System.out.println("NO."+ number + " Finding ROOM");
+	        		System.out.println("NO."+ number + " Finding ROOM");
 	        		for(int avalivable =0; avalivable<Demo.ROOMS.length; avalivable++) {
 	        			if(Demo.ROOMS[avalivable] == 0) {
 	        				Demo.ROOMS[avalivable] = number;
@@ -93,10 +75,30 @@ public class InThread extends Thread {
 	        		break;
 	        		
 	        	}
+	        	case 1:{
+                                System.out.println("No."+number + " Finding BASKET");
+	        		
+	        		
+	        		for(int avalivable=0; avalivable<Demo.BASKETS.length; avalivable++) {
+	        			if(Demo.BASKETS[avalivable] == 0) {
+	        				Demo.BASKETS[avalivable] = number;
+	        				temp2 = avalivable+1;
+                                                Demo.ROOMS[temp1-1] = 0;
+                                                System.out.println("NO."+ temp1 + " ROOM EMPTY");
+	        				step++;
+                                                
+	        				System.out.println("USE NO."+ temp2 + " BASKET");
+	        				break;
+	        			}
+	        			if(avalivable==Demo.BASKETS.length-1)
+		        			System.out.println("!!!NO Basket for "+number+"!!!");
+	        		}
+	 	        	break;
+	        	}
 	        	case 2:{
 	        		System.out.println("NO."+number + " SWIMMING");
-                                System.out.println("NO."+ temp1 + " ROOM EMPTY");
-                                Demo.ROOMS[temp1-1] = 0;
+                                
+                                
 	        		step++;
 	        		
 	        		break;
@@ -110,7 +112,10 @@ public class InThread extends Thread {
 	        				temp1 = i+1;
 	        				step++;
                                                 System.out.println("USE NO."+ temp1 + " ROOM");
-	        				break;
+	        				Demo.BASKETS[temp2-1] = 0;
+                                                leave();
+                                                System.out.println("NO."+ temp2 + " BASKET EMPTY");
+                                                break;
 	        			}
 	        			if(i==Demo.ROOMS.length-1)
 	        				System.out.println("!!!NO Room for "+number +"!!!");
@@ -120,18 +125,18 @@ public class InThread extends Thread {
 	        	case 4:{
 	        		System.out.println("NO."+ number + " LEAVE POOL");
                                 System.out.println("NO."+ temp1 + " ROOM EMPTY");
-                                System.out.println("NO."+ temp2 + " BASKET EMPTY");
-	        		Demo.BASKETS[temp2-1] = 0;
+                                
+	        		
 	        		step++;
                                 //step=1;
 	        		Demo.ROOMS[temp1-1] = 0;
-	        		leave();
+	        		
 	        		break;
 	        	}
 	        }
 	      	try {
                               Thread.currentThread();
-	      		      Thread.sleep(Demo.getPoissonRandom(number+10)*300);
+	      		      Thread.sleep(Demo.getPoissonRandom(10)*300);
             } 
             catch(InterruptedException e) {
                  e.printStackTrace();

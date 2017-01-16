@@ -24,7 +24,7 @@ public class Demo {
 	public static void main(String[] args) throws InterruptedException {
                  int num1;
                  int num2;
-                 int cu;
+                 int customers;
 		//Scanner scanner = new Scanner(System.in);
                 
 		java.util.Scanner scanner = new java.util.Scanner(System.in);
@@ -33,7 +33,7 @@ public class Demo {
                 System.out.println("ENTER BASKETS NUMBER:");
                 num2 = scanner.nextInt();
                 System.out.println("ENTER CUSTOMERS NUMBER:");
-                cu   = scanner.nextInt();
+                customers   = scanner.nextInt();
                //int num1=7;
                Demo.ROOMS = new int[num1];
                Demo.BASKETS = new int[num2];
@@ -48,7 +48,7 @@ public class Demo {
                 Thread.sleep(getPoissonRandom(4000));
         	//number=1;
                 number++;
-                if(number>cu)
+                if(number>customers)
                     break;
                 InThread inThread = new InThread(number);
         	inThread.start();
